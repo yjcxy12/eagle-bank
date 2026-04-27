@@ -9,5 +9,8 @@
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
   }
 }

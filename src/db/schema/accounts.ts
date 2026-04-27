@@ -2,12 +2,20 @@ import { relations } from 'drizzle-orm';
 import {
   index,
   numeric,
+  pgSequence,
   pgTable,
   timestamp,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { accountTypeEnum, currencyEnum } from './enums.js';
+import { accountTypeEnum, currencyEnum, sortCodeEnum } from './enums.js';
+
+export const accountNumberSeq = pgSequence('account_number_seq', {
+  startWith: 1,
+  maxValue: 999999,
+  cycle: false,
+});
+
 import { transactions } from './transactions.js';
 import { users } from './users.js';
 
@@ -16,7 +24,7 @@ export const accounts = pgTable(
   {
     id: uuid('id').primaryKey().defaultRandom(),
     accountNumber: varchar('account_number', { length: 8 }).unique().notNull(), // 01XXXXXX
-    sortCode: varchar('sort_code', { length: 8 }).notNull(), // e.g. 10-10-10
+    sortCode: sortCodeEnum('sort_code').notNull().default('10-10-10'),
     userId: varchar('user_id')
       .notNull()
       .references(() => users.id),

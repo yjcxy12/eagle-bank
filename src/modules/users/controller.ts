@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import { createUser, findUserById, updateUser } from './service.js';
+import { createUser, deleteUser, findUserById, updateUser } from './service.js';
 import type { CreateUserBody, GetUserParams, UpdateUserBody, User, UserRow } from './types.js';
 
 function formatUser(user: UserRow): User {
@@ -18,7 +18,7 @@ export async function createUserHandler(
   request: FastifyRequest<{ Body: CreateUserBody }>,
   reply: FastifyReply,
 ) {
-  const result = await createUser(request.server.db, request.body);
+  const result = await createUser({ db: request.server.db, data: request.body });
 
   if ('error' in result) {
     return reply.status(400).send({ message: 'Email already in use' });
@@ -37,7 +37,7 @@ export async function updateUserHandler(
     return reply.status(403).send({ message: 'Forbidden' });
   }
 
-  const result = await updateUser(request.server.db, { userId }, request.body);
+  const result = await updateUser({ db: request.server.db, userId, data: request.body });
 
   if ('error' in result) {
     if (result.error === 'not_found') {
@@ -59,11 +59,33 @@ export async function getUserHandler(
     return reply.status(403).send({ message: 'Forbidden' });
   }
 
-  const user = await findUserById(request.server.db, { userId });
+  const user = await findUserById({ db: request.server.db, userId });
 
   if (!user) {
     return reply.status(404).send({ message: 'User not found' });
   }
 
   return reply.status(200).send(formatUser(user));
+}
+
+export async function deleteUserHandler(
+  request: FastifyRequest<{ Params: GetUserParams }>,
+  reply: FastifyReply,
+) {
+  const { userId } = request.params;
+
+  if (request.user.userId !== userId) {
+    return reply.status(403).send({ message: 'Forbidden' });
+  }
+
+  const result = await deleteUser({ db: request.server.db, userId });
+
+  if ('error' in result) {
+    if (result.error === 'has_accounts') {
+      return reply.status(409).send({ message: 'User has active accounts' });
+    }
+    return reply.status(404).send({ message: 'User not found' });
+  }
+
+  return reply.status(204).send();
 }

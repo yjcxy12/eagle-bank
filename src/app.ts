@@ -6,10 +6,12 @@ import {
 } from '@fastify/type-provider-zod';
 import Fastify from 'fastify';
 import { config } from './config.js';
+import { accountRoutes } from './modules/accounts/routes.js';
+import { authRoutes } from './modules/auth/routes.js';
+import { transactionRoutes } from './modules/transactions/routes.js';
+import { userRoutes } from './modules/users/routes.js';
 import dbPlugin from './plugins/db.js';
 import jwtPlugin from './plugins/jwt.js';
-import { authRoutes } from './modules/auth/routes.js';
-import { userRoutes } from './modules/users/routes.js';
 
 export function buildApp(databaseUrl = config.databaseUrl) {
   const app = Fastify({ logger: true });
@@ -19,13 +21,10 @@ export function buildApp(databaseUrl = config.databaseUrl) {
 
   app.setErrorHandler((error, _request, reply) => {
     if (hasZodFastifySchemaValidationErrors(error)) {
+      console.log(error.validation);
       return reply.status(400).send({
         message: 'Validation failed',
-        details: error.validation.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-          type: issue.code,
-        })),
+        details: error.validation,
       });
     }
     reply.send(error);
@@ -36,6 +35,8 @@ export function buildApp(databaseUrl = config.databaseUrl) {
   app.register(jwtPlugin);
   app.register(authRoutes);
   app.register(userRoutes);
+  app.register(accountRoutes);
+  app.register(transactionRoutes);
 
   app.get('/health', async () => ({ status: 'ok' }));
 

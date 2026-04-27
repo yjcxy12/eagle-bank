@@ -25,15 +25,15 @@ const userResponseSchema = z.object({
 });
 
 // Strict field validators shared by create and update
-const userRequestSchema = z.object({
-  name: z.string(),
+const userRequestBodySchema = z.object({
+  name: z.string().max(255),
   email: z.email(),
   phoneNumber: z.string().regex(/^\+[1-9]\d{1,14}$/),
   address: addressSchema,
 });
 
 export const createUserSchema = {
-  body: userRequestSchema.extend({ password: z.string().min(8) }),
+  body: userRequestBodySchema.extend({ password: z.string().min(8) }),
   response: {
     201: userResponseSchema,
   },
@@ -52,10 +52,14 @@ export const getUserSchema = {
 
 export const updateUserSchema = {
   params: userIdParams,
-  body: userRequestSchema.partial(),
+  body: userRequestBodySchema.partial(),
   response: {
     200: userResponseSchema,
   },
+};
+
+export const deleteUserSchema = {
+  params: userIdParams,
 };
 
 export type User = z.infer<typeof userResponseSchema>;

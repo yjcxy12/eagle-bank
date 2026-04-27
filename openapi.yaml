@@ -714,7 +714,7 @@ components:
             - "01765432"
         sortCode:
           type: string
-          examples:
+          enum:
             - "10-10-10"
         name:
           type: string

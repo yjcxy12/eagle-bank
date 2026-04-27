@@ -8,6 +8,20 @@
       "when": 1777313431156,
       "tag": "0000_even_cannonball",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777329286709,
+      "tag": "0001_stormy_daimon_hellstrom",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777329553879,
+      "tag": "0002_adorable_freak",
+      "breakpoints": true
     }
   ]
 }

@@ -1,13 +1,13 @@
-import Fastify from 'fastify'
-import { ZodTypeProvider } from '@fastify/type-provider-zod'
-import sensible from '@fastify/sensible'
+import sensible from '@fastify/sensible';
+import type { ZodTypeProvider } from '@fastify/type-provider-zod';
+import Fastify from 'fastify';
 
 export function buildApp() {
-  const app = Fastify({ logger: true }).withTypeProvider<ZodTypeProvider>()
+  const app = Fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();
 
-  app.register(sensible)
+  app.register(sensible);
 
-  app.get('/health', async () => ({ status: 'ok' }))
+  app.get('/health', async () => ({ status: 'ok' }));
 
-  return app
+  return app;
 }

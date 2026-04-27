@@ -5,6 +5,8 @@ info:
   description: |-
     We want you to create a REST API for Eagle Bank which conforms to this OpenAPI specification which allows a user to create, fetch, update and delete a bank account and deposit or withdraw money from the account. These will be stored as transactions against a bank account which be retrieved but not modified or deleted.
 tags:
+  - name: auth
+    description: Authenticate a user
   - name: account
     description: Manage a bank account
   - name: transaction
@@ -12,6 +14,43 @@ tags:
   - name: user
     description: Manage a user
 paths:
+  /v1/auth/login:
+    post:
+      tags:
+        - auth
+      description: Authenticate a user and return a JWT token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Invalid details supplied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /v1/accounts:
     post:
       tags:
@@ -25,34 +64,34 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBankAccountRequest'
+              $ref: "#/components/schemas/CreateBankAccountRequest"
         required: true
       responses:
-        '201':
+        "201":
           description: Bank Account has been created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankAccountResponse'
-        '400':
+                $ref: "#/components/schemas/BankAccountResponse"
+        "400":
           description: Invalid details supplied
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '401':
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to access the transaction
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -66,19 +105,19 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: The list of bank accounts
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListBankAccountsResponse'
-        '401':
+                $ref: "#/components/schemas/ListBankAccountsResponse"
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -101,37 +140,37 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: The bank account details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankAccountResponse'
-        '400':
+                $ref: "#/components/schemas/BankAccountResponse"
+        "400":
           description: The request didn't supply all the necessary data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '401':
+        "401":
           description: The user was not authenticated
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to access the bank account details
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '404':
+        "404":
           description: Bank account was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -157,40 +196,40 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateBankAccountRequest'
+              $ref: "#/components/schemas/UpdateBankAccountRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: The updated bank account details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankAccountResponse'
-        '400':
+                $ref: "#/components/schemas/BankAccountResponse"
+        "400":
           description: The request didn't supply all the necessary data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '401':
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to update the bank account details
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '404':
+        "404":
           description: Bank account was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -212,33 +251,33 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '204':
+        "204":
           description: The bank account has been deleted
-        '400':
+        "400":
           description: The request didn't supply all the necessary data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '401':
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to delete the bank account details
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '404':
+        "404":
           description: Bank account was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -264,48 +303,48 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateTransactionRequest'
+              $ref: "#/components/schemas/CreateTransactionRequest"
         required: true
       security:
         - bearerAuth: []
       responses:
-        '201':
+        "201":
           description: Transaction has been created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionResponse"
+        "400":
           description: Invalid details supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BadRequestErrorResponse'
-        '401':
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to delete the bank account details
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '404':
+        "404":
           description: Bank account was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '422':
+        "422":
           description: Insufficient funds to process transaction
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -327,37 +366,37 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: The list of transaction details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListTransactionsResponse'
-        '400':
+                $ref: "#/components/schemas/ListTransactionsResponse"
+        "400":
           description: The request didn't supply all the necessary data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '401':
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to access the transactions
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '404':
+        "404":
           description: Bank account was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -387,37 +426,37 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: The transaction details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionResponse"
+        "400":
           description: The request didn't supply all the necessary data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '401':
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to access the transaction
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '404':
+        "404":
           description: Bank account was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -434,18 +473,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUserRequest'
+              $ref: "#/components/schemas/CreateUserRequest"
         required: true
       responses:
-        '201':
+        "201":
           description: User has been created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
-        '400':
+                $ref: "#/components/schemas/UserResponse"
+        "400":
           description: Invalid details supplied
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -468,37 +507,37 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: The user details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
-        '400':
+                $ref: "#/components/schemas/UserResponse"
+        "400":
           description: The request didn't supply all the necessary data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '401':
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to access the transaction
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '404':
+        "404":
           description: User was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -524,40 +563,40 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUserRequest'
+              $ref: "#/components/schemas/UpdateUserRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: The updated user details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
-        '400':
+                $ref: "#/components/schemas/UserResponse"
+        "400":
           description: The request didn't supply all the necessary data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '401':
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to access the transaction
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '404':
+        "404":
           description: User was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -579,39 +618,39 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '204':
+        "204":
           description: The user has been deleted
-        '400':
+        "400":
           description: The request didn't supply all the necessary data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestErrorResponse"
-        '404':
+        "404":
           description: User was not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '401':
+        "401":
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '403':
+        "403":
           description: The user is not allowed to access the transaction
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '409':
+        "409":
           description: A user cannot be deleted when they are associated with a bank account
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        '500':
+        "500":
           description: An unexpected error occurred
           content:
             application/json:
@@ -632,7 +671,7 @@ components:
             - "My Account"
         accountType:
           type: string
-          enum: 
+          enum:
             - "personal"
     UpdateBankAccountRequest:
       type: object
@@ -644,7 +683,7 @@ components:
             - "My Account"
         accountType:
           type: string
-          enum: 
+          enum:
             - "personal"
     ListBankAccountsResponse:
       type: object
@@ -654,7 +693,7 @@ components:
         accounts:
           type: array
           items:
-             $ref: "#/components/schemas/BankAccountResponse"
+            $ref: "#/components/schemas/BankAccountResponse"
     BankAccountResponse:
       type: object
       required:
@@ -675,13 +714,13 @@ components:
             - "01765432"
         sortCode:
           type: string
-          enum: 
+          examples:
             - "10-10-10"
         name:
           type: string
         accountType:
           type: string
-          enum: 
+          enum:
             - "personal"
         balance:
           type: number
@@ -698,10 +737,10 @@ components:
             - "GBP"
         createdTimestamp:
           type: string
-          format: 'date-time'
+          format: "date-time"
         updatedTimestamp:
           type: string
-          format: 'date-time'
+          format: "date-time"
     CreateTransactionRequest:
       type: object
       required:
@@ -724,7 +763,7 @@ components:
             - "GBP"
         type:
           type: string
-          enum: 
+          enum:
             - "deposit"
             - "withdrawal"
         reference:
@@ -737,7 +776,7 @@ components:
         transactions:
           type: array
           items:
-             $ref: "#/components/schemas/TransactionResponse"
+            $ref: "#/components/schemas/TransactionResponse"
     TransactionResponse:
       type: object
       required:
@@ -747,7 +786,7 @@ components:
         - type
         - createdTimestamp
       properties:
-        id: 
+        id:
           type: string
           pattern: ^tan-[A-Za-z0-9]$
           examples:
@@ -763,7 +802,7 @@ components:
             - "GBP"
         type:
           type: string
-          enum: 
+          enum:
             - "deposit"
             - "withdrawal"
         reference:
@@ -771,11 +810,30 @@ components:
         userId:
           type: string
           format: ^usr-[A-Za-z0-9]+$
-          examples: 
+          examples:
             - usr-abc123
         createdTimestamp:
           type: string
-          format: 'date-time'
+          format: "date-time"
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    AuthResponse:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          description: JWT bearer token
     CreateUserRequest:
       type: object
       required:
@@ -783,11 +841,15 @@ components:
         - address
         - phoneNumber
         - email
+        - password
       properties:
         name:
           type: string
           examples:
             - "Test User"
+        password:
+          type: string
+          minLength: 8
         address:
           type: object
           required:
@@ -813,7 +875,7 @@ components:
           format: ^\+[1-9]\d{1,14}$
         email:
           type: string
-          format: email    
+          format: email
     UpdateUserRequest:
       type: object
       properties:
@@ -893,10 +955,10 @@ components:
           format: email
         createdTimestamp:
           type: string
-          format: 'date-time'
+          format: "date-time"
         updatedTimestamp:
           type: string
-          format: 'date-time'
+          format: "date-time"
     ErrorResponse:
       type: object
       required:

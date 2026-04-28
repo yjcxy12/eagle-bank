@@ -106,7 +106,7 @@ describe('POST /v1/auth/login', () => {
       message: 'Validation failed',
       details: expect.arrayContaining([
         expect.objectContaining({
-          schemaPath: expect.stringContaining('email'),
+          field: 'email',
         }),
       ]),
     });
@@ -124,7 +124,7 @@ describe('POST /v1/auth/login', () => {
       message: 'Validation failed',
       details: expect.arrayContaining([
         expect.objectContaining({
-          schemaPath: expect.stringContaining('password'),
+          field: 'password',
         }),
       ]),
     });
@@ -142,7 +142,7 @@ describe('POST /v1/auth/login', () => {
       message: 'Validation failed',
       details: expect.arrayContaining([
         expect.objectContaining({
-          schemaPath: expect.stringContaining('email'),
+          field: 'email',
         }),
       ]),
     });

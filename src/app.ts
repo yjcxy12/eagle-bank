@@ -23,7 +23,13 @@ export function buildApp(databaseUrl = config.databaseUrl) {
     if (hasZodFastifySchemaValidationErrors(error)) {
       return reply.status(400).send({
         message: 'Validation failed',
-        details: error.validation,
+        details: error.validation.map((v: any) => ({
+          field: v.instancePath
+            ? v.instancePath.slice(1).replace(/\//g, '.')
+            : '',
+          message: v.message,
+          type: v.keyword,
+        })),
       });
     }
     reply.send(error);

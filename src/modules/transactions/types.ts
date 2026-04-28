@@ -18,7 +18,7 @@ const accountIdParams = z.object({
 });
 
 const transactionIdParams = accountIdParams.extend({
-  transactionId: z.string().regex(/^tan-[A-Za-z0-9]+$/),
+  transactionId: z.string().regex(/^tan-[A-Za-z0-9_-]+$/),
 });
 
 // Strict request validators

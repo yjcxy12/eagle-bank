@@ -40,7 +40,7 @@ export const createUserSchema = {
 };
 
 const userIdParams = z.object({
-  userId: z.string().regex(/^usr-[A-Za-z0-9]+$/),
+  userId: z.string().regex(/^usr-[A-Za-z0-9_-]+$/),
 });
 
 export const getUserSchema = {

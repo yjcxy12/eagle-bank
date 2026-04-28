@@ -5,6 +5,7 @@ export default defineConfig({
     environment: 'node',
     globalSetup: './tests/setup.ts',
     testTimeout: 10000,
+    fileParallelism: false,
     typecheck: {
       tsconfig: './tsconfig.test.json',
     },

@@ -21,7 +21,6 @@ export function buildApp(databaseUrl = config.databaseUrl) {
 
   app.setErrorHandler((error, _request, reply) => {
     if (hasZodFastifySchemaValidationErrors(error)) {
-      console.log(error.validation);
       return reply.status(400).send({
         message: 'Validation failed',
         details: error.validation,
